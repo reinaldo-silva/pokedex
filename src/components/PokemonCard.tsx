@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { api } from "../services/api";
-import { Pokemon } from "../pages/Home";
-import { CircleNotch } from "phosphor-react";
 import pokeImg from "../assets/images/pokeball.png";
+import { Pokemon } from "../pages/Home";
+import { api } from "../services/api";
 
 interface PokemonData {
   sprites: {
@@ -14,21 +13,25 @@ interface PokemonData {
   };
 }
 
-const PokemonCard: React.FC<Pokemon> = ({ name, url }) => {
+interface PokemonCard extends Pokemon {
+  handleClick: () => void;
+}
+
+const PokemonCard: React.FC<PokemonCard> = ({ name, url, handleClick }) => {
   const [pokemonData, setPokemonData] = useState({} as PokemonData);
 
   useEffect(() => {
     api.get(url).then((response) => {
-      console.log(response);
-
       setPokemonData(response.data);
     });
   }, []);
 
   return (
-    <div className="flex w-80 bg-slate-800 h-96 flex-col shadow-md rounded-md p-4 items-center justify-evenly">
+    <div
+      onClick={handleClick}
+      className="flex w-80 bg-slate-800 h-96 flex-col shadow-md rounded-md p-4 items-center justify-evenly cursor-pointer"
+    >
       {!pokemonData.sprites ? (
-        // <CircleNotch size={32} weight="bold" className="animate-spin" />
         <div className="w-full flex justify-center flex-col items-center gap-4">
           <img src={pokeImg} alt="" className="animate-bounce h-10 w-10" />
           <h2 className="font-bold text-zinc-400">Carregando</h2>

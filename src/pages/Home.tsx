@@ -1,6 +1,8 @@
 import { CaretCircleDown } from "phosphor-react";
 import React, { useCallback, useEffect, useState } from "react";
+import pokemonLogo from "../assets/images/pokemonLogo.png";
 import PokemonCard from "../components/PokemonCard";
+import { PokemonModal } from "../components/PokemonModal";
 import { api } from "../services/api";
 
 export interface Pokemon {
@@ -11,6 +13,7 @@ export interface Pokemon {
 const Home: React.FC = () => {
   const [pokemons, setPokemons] = useState([] as Pokemon[]);
   const [offset, setOffset] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     api
@@ -23,7 +26,11 @@ const Home: React.FC = () => {
       .then((response) => {
         setPokemons((oldPokemons) => [
           ...oldPokemons,
-          ...response.data.results,
+          ...(oldPokemons.findIndex(
+            (pokemon) => pokemon.name === response.data.results[0].name
+          ) >= 0
+            ? []
+            : response.data.results),
         ]);
       });
   }, [offset]);
@@ -33,11 +40,19 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center bg-slate-900 py-4 min-h-screen">
-      <header>Pokemons</header>
+    <div className="flex flex-col items-center bg-slate-900 min-h-screen relative">
+      <PokemonModal isOpen={modalIsOpen} setIsOpen={setModalIsOpen} />
+      <header className="p-4">
+        <img className="w-44" src={pokemonLogo} alt="" />
+      </header>
       <div className="w-full flex flex-wrap justify-around gap-6 p-4">
         {pokemons.map((poke) => (
-          <PokemonCard name={poke.name} url={poke.url} key={poke.name} />
+          <PokemonCard
+            name={poke.name}
+            url={poke.url}
+            key={poke.name}
+            handleClick={() => setModalIsOpen(true)}
+          />
         ))}
       </div>
 
