@@ -1,46 +1,33 @@
 import { Slot } from "@radix-ui/react-slot";
-import React, { InputHTMLAttributes, ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-export interface TextInputRootProps {
+interface ChildrenProps {
   children: ReactNode;
 }
 
-const TextInputRoot: React.FC<TextInputRootProps> = ({ children }) => {
+function TextInputRoot({ children }: ChildrenProps) {
   return (
-    <div className="flex items-center gap-3 py-4 h-12 px-3 rounded bg-gray-800 w-full focus-within:ring-2 ring-cyan-300">
+    <label className="flex h-11 w-full cursor-text items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 transition focus-within:border-white/20 focus-within:bg-white/10 focus-within:ring-2 focus-within:ring-red-400/40">
       {children}
-    </div>
+    </label>
   );
-};
-
-TextInputRoot.displayName = "TextInput.Root";
-
-export interface TextInputIconProps {
-  children: ReactNode;
 }
 
-const TextInputIcon: React.FC<TextInputIconProps> = ({ children }) => {
-  return <Slot className="w-6 h-6 text-gray-400">{children}</Slot>;
-};
+function TextInputIcon({ children }: ChildrenProps) {
+  return <Slot className="size-5 shrink-0 text-zinc-400">{children}</Slot>;
+}
 
-TextInputIcon.displayName = "TextInput.Icon";
-
-export interface TextInputInputProps
-  extends InputHTMLAttributes<HTMLInputElement> {}
-
-const TextInputInput: React.FC<TextInputInputProps> = ({ ...rest }) => {
+function TextInputInput(props: ComponentProps<"input">) {
   return (
     <input
-      className="bg-transparent flex-1 text-gray-100 text-xs outline-none placeholder:text-gray-400"
-      {...rest}
+      className="min-w-0 flex-1 bg-transparent text-sm text-zinc-100 outline-hidden placeholder:text-zinc-500"
+      {...props}
     />
   );
-};
-
-TextInputInput.displayName = "TextInput.Input";
+}
 
 export const TextInput = {
   Root: TextInputRoot,
-  Input: TextInputInput,
   Icon: TextInputIcon,
+  Input: TextInputInput,
 };

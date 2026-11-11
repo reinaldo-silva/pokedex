@@ -1,3 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scrollbar-gutter: stable;
+  }
+
+  /* Lock page scroll while the Pokémon modal (<dialog>) is open. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-zinc-950 font-sans text-zinc-100 antialiased;
+  }
+}
